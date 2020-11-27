@@ -1,0 +1,36 @@
+sudo -i
+
+sudo yum update -y
+
+sudo amazon-linux-extras install docker
+
+sudo service docker start
+
+sudo usermod -a -G docker ec2-user
+
+mkdir Demo
+
+cd Demo
+
+nano Dockerfile
+
+<<<<<<........
+FROM tomcat:8.5.60-jdk11-corretto
+LABEL maintainer="aaa"
+
+ADD Todo-List-Project.war /usr/local/tomcat/webapps/
+
+EXPOSE 8080
+CMD ["catalina.sh", "run"])
+.....>>>>>>>>>
+Ctrl + S
+
+Ctrl + X
+
+cp /home/ec2-user/Todo-List-Project.war ./
+
+
+docker build -t hello-world .
+
+docker run -t -i -p 8080:8080 hello-world
+

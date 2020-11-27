@@ -1,0 +1,42 @@
+sudo -i
+
+yum update
+
+sudo amazon-linux-extras install docker
+
+
+
+sudo usermod -a -G docker ec2-user
+
+cd /home/ec2-user
+
+systemctl status docker
+
+systemctl start docker
+
+docker info
+
+nano Dockerfile
+
+-------------
+<< Copy this into Dockfile >>
+FROM tomcat:8.5.60-jdk11-corretto
+LABEL maintainer="Adinath"
+
+ADD MovieBookingSystem.war 
+/usr/local/tomcat/webapps/
+
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
+-----------------
+
+docker build -t docktom .
+
+docker images --filter reference=docktom
+
+docker run -t -i -p 8080:8080 docktom
+
+
+
+
+

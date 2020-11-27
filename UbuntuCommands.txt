@@ -1,0 +1,98 @@
+#Ubuntu Commands for deploying tomcat server
+
+java  install
+
+>sudo ufw allow 8080/tcp
+
+>sudo apt install openjdk-11-jre-headless  
+
+>sudo update-alternatives --config java
+
+>/usr/lib/jvm/java-1.11.0-openjdk-amd64
+
+nano /etc/profile
+
+JAVA_HOME=/usr/lib/jvm/java-11
+PATH=$PATH:$HOME/bin:$JAVA_HOME/bin
+export JAVA_HOME
+export PATH
+
+>cd /tmp
+
+>su root
+
+>sudo passwd
+
+>sudo groupadd tomcat
+
+>sudo useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat
+
+>sudo ufw allow 8080/tcp
+
+>wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.40/bin/apache-tomcat-9.0.40.tar.gz
+
+>sudo mkdir /opt/tomcat
+
+>sudo tar -xf /tmp/apache-tomcat-9.0.40.tar.gz 
+
+>mv apache-tomcat-9.0.40.tar.gz latest
+
+>sudo cp -r ./latest /opt/tomcat/latest/
+
+>cd /opt/tomcat/conf/
+> nano tomcat-user.xml
+
+<role rolename="admin-gui"/>
+<role rolename="manager-gui"/>
+<user username="admin" password="Your_Password" roles="admin-gui, manager-gui"/>
+
+
+
+-------------------------------------Modify Tomcat User Permission------------------
+
+>sudo chgrp -R tomcat /opt/tomcat
+
+>cd apache-tomcat-9.0.40/
+
+>sudo chmod -R g+r conf
+
+>sudo chmod g+x conf
+-------------------------------------------------------------
+
+>sudo nano /etc/systemd/system/tomcat.service
+
+[Unit]
+Description=Tomcat 9 servlet container
+After=network.target
+
+[Service]
+Type=forking
+
+User=tomcat
+Group=tomcat
+
+Environment="JAVA_HOME=/usr/lib/jvm/default-java"
+Environment="JAVA_OPTS=-Djava.security.egd=file:///dev/urandom -Djava.awt.headless=true"
+
+Environment="CATALINA_BASE=/opt/tomcat/latest"
+Environment="CATALINA_HOME=/opt/tomcat/latest"
+Environment="CATALINA_PID=/opt/tomcat/latest/temp/tomcat.pid"
+Environment="CATALINA_OPTS= -Xms512M -Xmx1024M -server -XX:+UseParallelGC"
+
+ExecStart=/opt/tomcat/latest/bin/startup.sh
+ExecStop=/opt/tomcat/latest/bin/shutdown.sh
+
+[Install]
+WantedBy=multi-user.target
+
+----------------------------------------------------------------------
+
+>sudo systemctl daemon-reload
+
+>sudo systemctl start tomcat
+
+>sudo systemctl status tomcat
+
+>sudo systemctl enable tomcat
+
+
