@@ -25,7 +25,7 @@ CMD ["catalina.sh", "run"])
 .....>>>>>>>>>
 Ctrl + S
 
-Ctrl + X
+Enter
 
 cp /home/ec2-user/Todo-List-Project.war ./
 
